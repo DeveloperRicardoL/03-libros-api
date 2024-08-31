@@ -1,6 +1,6 @@
 import prisma from "../../prisma/prismaClient.js";
 
-export const getAutors = async (req, res) => {
+export const getAuthors = async (req, res) => {
   try {
     const authors = await prisma.author.findMany();
     res.json(authors);
@@ -28,4 +28,20 @@ export const createAuthor = async (req, res) => {
     res.status(500).json("Error al crear el autor");
   }
 };
-//djccakfkadfk
+
+export const getAuthor = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id <= 0) {
+      return res
+        .status(400)
+        .json({ msg: "Id no valido, debe ingresar un número valido" });
+    }
+    const author = await prisma.author.findUniqueOrThrow({
+      where: { id },
+    });
+    res.status(200).json(author);
+  } catch (error) {
+    res.status(404).json({ msg: "No se ha encontrado el autor" });
+  }
+};
