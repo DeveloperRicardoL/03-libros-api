@@ -45,3 +45,33 @@ export const getAuthor = async (req, res) => {
     res.status(404).json({ msg: "No se ha encontrado el autor" });
   }
 };
+
+export const updateAuthor = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id <= 0) res.status(400).json({ msg: "Id no valido" });
+    const { firstName, lastName, nationality } = req.body;
+    const author = await prisma.author.update({
+      where: { id },
+      data: { firstName, lastName, nationality },
+    });
+    if (!author) throw new Error("No se pudo actualizar el autor");
+    res.status(200).json(author);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json("Error al actualizar el autor");
+  }
+};
+
+export const deleteAuthor = async (req, res) => {
+  try {
+    const id = parseInt(req.params.id);
+    if (isNaN(id) || id <= 0) res.status(400).json({ msg: "Id no valido" });
+    const aut = await prisma.author.delete({
+      where: { id },
+    });
+    res.status(200).json("Autor eliminado correctamente");
+  } catch (error) {
+    res.status(500).json("Error al eliminar el autor");
+  }
+};
