@@ -50,10 +50,16 @@ export const updateAuthor = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id) || id <= 0) res.status(400).json({ msg: "Id no valido" });
-    const { firstName, lastName, nationality } = req.body;
+    const { firstName, lastName, nationality, birthdate } = req.body;
+    const dateAuthor = new Date(birthdate);
     const author = await prisma.author.update({
       where: { id },
-      data: { firstName, lastName, nationality },
+      data: {
+        ...(firstName && { firstName }),
+        ...(lastName && { lastName }),
+        ...(nationality && { nationality }),
+        ...(birthdate && { birthdate: dateAuthor }),
+      },
     });
     if (!author) throw new Error("No se pudo actualizar el autor");
     res.status(200).json(author);
