@@ -35,3 +35,14 @@ model Author {
   Book        Book[]
   updatedAt   DateTime  @updatedAt
 }
+
+model Users{
+  id        Int       @id @default(autoincrement())
+  firstName String
+  lastName  String
+  email     String    @unique
+  password  String
+  active    Boolean   @default(true)
+  updateAt  DateTime  @updatedAt
+  createAt  DateTime  @default(now())
+}
