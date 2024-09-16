@@ -42,7 +42,7 @@ model Users{
   lastName  String
   email     String    @unique
   password  String
-  active    Boolean   @default(true)
-  updateAt  DateTime  @updatedAt
-  createAt  DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  createdAt DateTime  @default(now())
+  deletedAt DateTime?
 }
