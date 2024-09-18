@@ -1,14 +1,25 @@
 import prisma from "../../prisma/prismaClient.js";
+import bcrypt from "bcryptjs";
 
 export const createUser = async (req, res) => {
   try {
     const { firstName, lastName, email, password } = req.body;
+    const passwordBcrypt = await bcrypt.hash(password, 10);
     const user = await prisma.users.create({
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        createdAt: true,
+        updatedAt: true,
+        deletedAt: true,
+      },
       data: {
         firstName: firstName.toLowerCase(),
         lastName: lastName.toLowerCase(),
         email: email.toLowerCase(),
-        password,
+        password: passwordBcrypt,
       },
     });
     res.status(201).json(user);
@@ -89,7 +100,8 @@ export const updateUser = async (req, res) => {
 export const deleteUser = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    if (!exitsUser(id))
+    const deleteUser = await exitsUser(id);
+    if (!deleteUser)
       return res.status(404).json({ msg: "Usuario no encontrado o no existe" });
     const user = await prisma.users.update({
       where: { id, deletedAt: null },
@@ -107,7 +119,7 @@ export const deleteUser = async (req, res) => {
 export const exitsUser = async (id) => {
   try {
     const validUser = await prisma.users.findUnique({
-      where: { id },
+      where: { id, deletedAt: null },
     });
     if (!validUser) {
       return false;

@@ -2,6 +2,7 @@ import express from "express";
 import librosRoutes from "./src/book/book.routes.js";
 import authorsRoutes from "./src/author/author.routes.js";
 import usersRoutes from "./src/users/users.routes.js";
+import authRoutes from "./src/auth/auth.routes.js";
 
 const app = express();
 const port = 3000;
@@ -29,6 +30,7 @@ app.use("/api", librosRoutes);
 app.use("/api", authorsRoutes);
 //app.use("/api", printMetodo, usersRoutes);
 app.use("/api", usersRoutes);
+app.use("/api", authRoutes);
 
 app.listen(port, () => {
   console.log(`Server funcionando en http://localhost:${port}`);
