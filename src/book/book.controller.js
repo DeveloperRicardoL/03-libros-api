@@ -1,44 +1,33 @@
-import prisma from "../../prisma/prismaClient.js";
+import {
+  createBook,
+  deleteBook,
+  getBook,
+  getBooks,
+  updateBook,
+} from "./book.service.js";
 
-export const getBooks = async (req, res) => {
+export const getBooksController = async (req, res) => {
   try {
-    const books = await prisma.book.findMany();
+    const books = await getBooks();
     res.json(books);
   } catch (error) {
     res.status(500).json({ error: "Error al obtener libros" });
   }
 };
 
-export const createBook = async (req, res) => {
+export const createBookController = async (req, res) => {
   try {
-    const { title, year, publisher } = req.body;
-
-    //Esto es igual a lo de arriba
-    // const title = req.body.title;
-    // const year = req.body.year;
-    // const publisher = req.body.publisher;
-
-    const book = await prisma.book.create({
-      data: {
-        title,
-        year,
-        publisher,
-      },
-    });
+    const book = await createBook(req.body);
     res.status(201).json(book);
   } catch (error) {
     res.status(500).json("Error al crear un libro");
   }
 };
 
-export const getBook = async (req, res) => {
+export const getBookController = async (req, res) => {
   try {
     const ident = parseInt(req.params.id);
-    const book = await prisma.book.findUnique({
-      where: {
-        id: ident,
-      },
-    });
+    const book = await getBook(ident);
     if (!book) throw new Error("No se encontro el libro");
     res.status(200).json(book);
   } catch (error) {
@@ -46,14 +35,10 @@ export const getBook = async (req, res) => {
   }
 };
 
-export const updateBook = async (req, res) => {
+export const updateBookController = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const { title } = req.body;
-    const book = await prisma.book.update({
-      where: { id },
-      data: { title },
-    });
+    const book = await updateBook(id, req.body);
     if (!book) throw new Error("No se pudo actualizar el libro");
     res.status(200).json(book);
   } catch (error) {
@@ -61,12 +46,10 @@ export const updateBook = async (req, res) => {
   }
 };
 
-export const deleteBook = async (req, res) => {
+export const deleteBookController = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    const book = await prisma.book.delete({
-      where: { id },
-    });
+    const book = await deleteBook(id);
     if (!book) throw new Error("No se pudo eliminar el libro");
     res.status(200).json({ msg: "Libro eliminado correctamente" });
   } catch (error) {

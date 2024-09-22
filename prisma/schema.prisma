@@ -19,10 +19,10 @@ model Book {
   year      Int
   publisher String
   image     String   @default("Sin imagen")
-  createAt  DateTime @default(now())
+  createdAt DateTime @default(now())
   author    Author   @relation(fields: [authorId], references: [id])
   authorId  Int
-  updatedAt  DateTime @updatedAt
+  updatedAt DateTime @updatedAt
 }
 
 model Author {
@@ -31,7 +31,7 @@ model Author {
   lastName    String
   nationality String
   birthdate   DateTime
-  createAt    DateTime  @default(now())
+  createdAt   DateTime  @default(now())
   Book        Book[]
   updatedAt   DateTime  @updatedAt
 }

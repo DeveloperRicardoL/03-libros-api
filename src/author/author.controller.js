@@ -1,27 +1,23 @@
-import prisma from "../../prisma/prismaClient.js";
+import {
+  createAuthor,
+  deleteAuthor,
+  getAuthor,
+  getAuthors,
+  updateAuthor,
+} from "./author.service.js";
 
-export const getAuthors = async (req, res) => {
+export const getAuthorsController = async (req, res) => {
   try {
-    const authors = await prisma.author.findMany();
+    const authors = await getAuthors();
     res.json(authors);
   } catch (error) {
     res.status(500).json({ Error: "Error al obtener los autores" });
   }
 };
 
-export const createAuthor = async (req, res) => {
+export const createAuthorController = async (req, res) => {
   try {
-    const { firstName, lastName, nationality, birthdate } = req.body;
-    const dateAu = new Date(birthdate);
-
-    const author = await prisma.author.create({
-      data: {
-        firstName,
-        lastName,
-        nationality,
-        birthdate: dateAu,
-      },
-    });
+    const author = await createAuthor(req.body);
     res.status(201).json(author);
   } catch (error) {
     console.log(error);
@@ -29,7 +25,7 @@ export const createAuthor = async (req, res) => {
   }
 };
 
-export const getAuthor = async (req, res) => {
+export const getAuthorController = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id) || id <= 0) {
@@ -37,30 +33,18 @@ export const getAuthor = async (req, res) => {
         .status(400)
         .json({ msg: "Id no valido, debe ingresar un número valido" });
     }
-    const author = await prisma.author.findUniqueOrThrow({
-      where: { id },
-    });
+    const author = await getAuthor(id);
     res.status(200).json(author);
   } catch (error) {
     res.status(404).json({ msg: "No se ha encontrado el autor" });
   }
 };
 
-export const updateAuthor = async (req, res) => {
+export const updateAuthorController = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id) || id <= 0) res.status(400).json({ msg: "Id no valido" });
-    const { firstName, lastName, nationality, birthdate } = req.body;
-    const dateAuthor = new Date(birthdate);
-    const author = await prisma.author.update({
-      where: { id },
-      data: {
-        ...(firstName && { firstName }),
-        ...(lastName && { lastName }),
-        ...(nationality && { nationality }),
-        ...(birthdate && { birthdate: dateAuthor }),
-      },
-    });
+    const author = await updateAuthor(id, req.body);
     if (!author) throw new Error("No se pudo actualizar el autor");
     res.status(200).json(author);
   } catch (error) {
@@ -69,13 +53,11 @@ export const updateAuthor = async (req, res) => {
   }
 };
 
-export const deleteAuthor = async (req, res) => {
+export const deleteAuthorController = async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     if (isNaN(id) || id <= 0) res.status(400).json({ msg: "Id no valido" });
-    const aut = await prisma.author.delete({
-      where: { id },
-    });
+    const author = await deleteAuthor(id);
     res.status(200).json("Autor eliminado correctamente");
   } catch (error) {
     res.status(500).json("Error al eliminar el autor");
