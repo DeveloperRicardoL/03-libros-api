@@ -1,23 +1,13 @@
-import prisma from "../../prisma/prismaClient.js";
-import bcrypt from "bcryptjs";
+import { loginLocalUser } from "./auth.service.js";
 
-export const loginLocalUser = async (req, res) => {
+export const loginLocalUserController = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    const user = await prisma.users.findUniqueOrThrow({
-      where: {
-        email,
-        deletedAt: null,
-      },
-    });
-
-    const passwordCheck = await bcrypt.compare(password, user.password);
+    const passwordCheck = await loginLocalUser(req.body);
 
     if (!passwordCheck) throw new Error();
-
     res.status(200).json({ msg: "Login true" });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ msg: "Login false" });
   }
 };
