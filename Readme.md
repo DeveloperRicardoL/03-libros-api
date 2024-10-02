@@ -15,3 +15,6 @@
 # Instalar JWT
 
 -Instalamos jwt con npm -`npm install jsonwebtoken`
+
+#Instalar dotenv
+npm i dotenv

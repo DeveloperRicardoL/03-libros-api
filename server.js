@@ -1,11 +1,13 @@
 import express from "express";
+import "dotenv/config";
 import librosRoutes from "./src/book/book.routes.js";
 import authorsRoutes from "./src/author/author.routes.js";
 import usersRoutes from "./src/users/users.routes.js";
 import authRoutes from "./src/auth/auth.routes.js";
 
 const app = express();
-const port = 3000;
+const port = parseInt(process.env.APIBOOK_PORT) || 3000;
+console.log(process.env.APIBOOK_PORT);
 //es para que lo transforme en json y lo interprete sin
 app.use(express.json());
 
