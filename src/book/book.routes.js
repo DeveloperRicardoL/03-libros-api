@@ -11,9 +11,12 @@ import { isAuthenticated } from "../middlewares/auth-middlewares.js";
 
 const router = express.Router();
 
+//PUBLIC
 router.get("/book", getBooksController);
-router.post("/book", isAuthenticated, createBookController);
 router.get("/book/:id", getBookController);
+
+//AUTH
+router.post("/book", isAuthenticated, createBookController);
 router.patch("/book/:id", isAuthenticated, updateBookController);
 router.delete("/book/:id", isAuthenticated, deleteBookController);
 

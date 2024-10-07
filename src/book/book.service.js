@@ -1,8 +1,9 @@
 import prisma from "../../prisma/prismaClient.js";
+import { getUserByEmail } from "../users/users.controller.js";
 
 export const createBook = async (book, email) => {
   const { title, year, publisher, authorId } = book;
-  console.log(`este dato viene desde el jwt ->${email}`);
+  const user = await getUserByEmail(email);
   //Esto es igual a lo de arriba
   // const title = req.body.title;
   // const year = req.body.year;
@@ -13,6 +14,7 @@ export const createBook = async (book, email) => {
       year,
       publisher,
       authorId,
+      userId: user.id,
     },
   });
   return create_book;
@@ -25,8 +27,10 @@ export const getBooks = async () => {
 
 export const getBook = async (id) => {
   const get_book = await prisma.book.findUnique({
-    where: {
-      id,
+    where: { id },
+    include: {
+      author: { select: { firstName: true, lastName: true } },
+      user: { select: { email: true } },
     },
   });
   return get_book;

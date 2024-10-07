@@ -23,6 +23,8 @@ model Book {
   author    Author   @relation(fields: [authorId], references: [id])
   authorId  Int
   updatedAt DateTime @updatedAt
+  user      Users?    @relation(fields: [userId], references: [id])
+  userId    Int?
 }
 
 model Author {
@@ -45,4 +47,5 @@ model Users{
   updatedAt DateTime  @updatedAt
   createdAt DateTime  @default(now())
   deletedAt DateTime?
+  Book      Book[]
 }

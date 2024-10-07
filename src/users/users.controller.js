@@ -86,3 +86,8 @@ export const exitsUser = async (id) => {
     return false;
   }
 };
+
+export const getUserByEmail = async (email) => {
+  const user = await prisma.users.findUniqueOrThrow({ where: { email } });
+  return user;
+};
