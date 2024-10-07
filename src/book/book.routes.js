@@ -7,12 +7,14 @@ import {
   updateBookController,
 } from "./book.controller.js";
 
+import { isAuthenticated } from "../middlewares/auth-middlewares.js";
+
 const router = express.Router();
 
 router.get("/book", getBooksController);
-router.post("/book", createBookController);
+router.post("/book", isAuthenticated, createBookController);
 router.get("/book/:id", getBookController);
-router.patch("/book/:id", updateBookController);
-router.delete("/book/:id", deleteBookController);
+router.patch("/book/:id", isAuthenticated, updateBookController);
+router.delete("/book/:id", isAuthenticated, deleteBookController);
 
 export default router;

@@ -17,7 +17,7 @@ export const getBooksController = async (req, res) => {
 
 export const createBookController = async (req, res) => {
   try {
-    const book = await createBook(req.body);
+    const book = await createBook(req.body, req.email);
     res.status(201).json(book);
   } catch (error) {
     res.status(500).json("Error al crear un libro");

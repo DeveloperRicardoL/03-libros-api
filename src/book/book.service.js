@@ -1,7 +1,8 @@
 import prisma from "../../prisma/prismaClient.js";
 
-export const createBook = async (book) => {
+export const createBook = async (book, email) => {
   const { title, year, publisher, authorId } = book;
+  console.log(`este dato viene desde el jwt ->${email}`);
   //Esto es igual a lo de arriba
   // const title = req.body.title;
   // const year = req.body.year;
